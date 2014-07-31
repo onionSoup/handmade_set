@@ -6,17 +6,18 @@ def handmade_set(input)
   HandmadeSet.new(input).inner_hash.values
 end
 
+#制御構造、メソッド呼び出し、クラス定義を渡すことは、
+#組み込みのSetでも想定していないようなのでテストしない。
 describe 'MySet' do
-  describe 'initialize' do
+  describe '#initialize' do
     context 'when input are class_name and string_of_class_name' do
       input = [Array, 'Array']
       it { expect(handmade_set(input)).to match_array build_in_set(input) }
     end
 
-    context 'when input include regexp, array, range, hash' do
+    context 'when input include regexp, array, symbol, range, hash' do
       input = [/1/, [1], :'1', (1..1), {:'1' => 1}, 1, '1']
-      #rspecのmatch_arrayが{:'1' => 1}でバグを出すため自作マッチャを使う。
-      it { expect(handmade_set(input)).to match_without_concern_for_order build_in_set(input) }
+      it { expect(handmade_set(input)).to match_array build_in_set(input) }
     end
 
     context 'when input include minus, decimal, binary, octal, hex' do

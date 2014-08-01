@@ -1,28 +1,10 @@
-require 'timeout'
-=begin
-def left_index_for_swap(array, pivot)
-  array.each_with_index do |item, index|
-    return index if item >= pivot
+class binary_tree_array
+  attr_accessor :array, :left_child_id, :right_child_id, :parent_id
+
+  def initialize(array)
+    @array = array
   end
 end
-
-def right_index_for_swap(array, pivot)
-  array.slice
-  array.each_with_index.reverse_each do |item, index|
-    return index if item <= pivot
-  end
-end
-
-def can_swap?(left_index, right_index)
-  left_index < right_index
-end
-
-def swap(right_index, left_index)
-  self[left_index], self[right_index] = self[right_index], self[left_index]
-end
-=end
-
-
 
   #pivot以上とpivot以下にarrayを分割する
   def my_quick_sort(array)
@@ -74,13 +56,7 @@ end
   end
 
 #main
+#timeout(3){
   array = [8, 4, 3, 7, 6, 5, 2, 1]
   my_quick_sort(array)
   p array
-
-
-
-
-
-
-

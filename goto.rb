@@ -16,10 +16,15 @@ catch :label do
  end
 =end
 
-sym = catch :label do
-  throw :label, :hihi
+catch :out do
+  for i in [1,2,3]
+    catch :in do
+      for j in %w(a b c )
+        throw :in if j == 'b'
+        p i
+        p j
+      end
+    end
+  end
+  p :iのループの外
 end
-
-binding.pry
-
-

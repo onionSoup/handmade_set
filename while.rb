@@ -35,8 +35,13 @@ class QuickSort
               end
             end
 
+            binding.pry
+
             #同じ要素を交換させると、無限ループになるので抜け出す。
-            throw :can_not_swap, left_index if array[left_index] == array[right_index]
+            #[8,8,7,8]は最初に８と７を交換させないと駄目。
+            #[8,8]は無限ループになるので抜け出す。
+            #したがって、[8,8,8]
+            throw :can_not_swap, left_index if array[left_index] == array[right_index] && (right_index - left_index <= 1)
 
             if left_index < right_index
               array[left_index], array[right_index] = array[right_index], array[left_index]
@@ -60,28 +65,40 @@ class QuickSort
     #確定処理 インスタンスに格納する。
     #要素が１個だけの配列は、当然それ以上並び替えられないので格納する
     #要素が２個の場合は、[1,2]や[2,2]は並び替えるないので格納。[2,1]なら並び替えるので格納しない。
-    #要素が２個以上の配列は、[2,2]なら並びかえられないので格納。一方[2,1,2]は並び替えるので格納しない。
+    #３つめは[1,2]や[2,2,3,4]のような、既に並べ終わっている場合。
+    #再度並び変える必要がないので格納しない。
+    #binding.pry
     if array.length == 1
       self.instance_array << array[0]
     end
+
     if array.size > 2 && array.uniq.length == 1
       array.each do |item|
         self.instance_array << item
       end
-    end
-    if array.length == 2 && array[0] <= array[1]
-      self.instance_array << array[0] << array[1]
+    elsif left_array
+      if right_array.nil? && left_array.empty?
+        array.each do |item|
+
+          self.instance_array << item
+        end
+      end
     end
   end
 end
 
 #main
-  array = [8, 4, 3, 7, 6, 5, 2, 1]
+#array = [2, 2, 3, 7, 6, 8, 5, 8, 4, 8]
+ array = [8, 8, 7, 8]
+  #array = [2, 2, 3, 4, 5, 6, 7, 8, 8, 8]
+  #array = [2, 2, 3, 4, 5, 6, 7, 8, 8, 8]
+  #array = [8, 4, 3, 7, 6, 5, 2, 1]
   #array = [8, 4, 3, 7, 6, 5, 2, 8]
+  #array = [8, 4, 3, 7, 6, 5, 2, 2, 8, 8]
   #array = [8,8]
+  #array = ['a', 'b', 'c', '4']
   q = QuickSort.new
   q.my_quick_sort(array)
-  p q.quick_sort_call_counter
   p q.instance_array
 
 

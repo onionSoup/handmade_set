@@ -12,7 +12,6 @@ describe 'MySet' do
   describe '#initialize' do
     context 'when input are class_name and string_of_class_name' do
       input = [Array, 'Array']
-      binding.pry
       it { expect(handmade_set(input)).to match_array build_in_set(input) }
     end
 

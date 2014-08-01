@@ -58,24 +58,26 @@ class QuickSort
     end
 
     #確定処理 インスタンスに格納する。
+    #要素が１個だけの配列は、当然それ以上並び替えられないので格納する
+    #要素が２個の場合は、[1,2]や[2,2]は並び替えるないので格納。[2,1]なら並び替えるので格納しない。
+    #要素が２個以上の配列は、[2,2]なら並びかえられないので格納。一方[2,1,2]は並び替えるので格納しない。
     if array.length == 1
       self.instance_array << array[0]
     end
-
     if array.size > 2 && array.uniq.length == 1
       array.each do |item|
         self.instance_array << item
       end
-    elsif array.length == 2 && right_array.nil? && left_array.empty?
-      binding.pry
+    end
+    if array.length == 2 && array[0] <= array[1]
       self.instance_array << array[0] << array[1]
     end
   end
 end
 
 #main
-  #array = [8, 4, 3, 7, 6, 5, 2, 1]
-  array = [8, 4, 3, 7, 6, 5, 2, 8]
+  array = [8, 4, 3, 7, 6, 5, 2, 1]
+  #array = [8, 4, 3, 7, 6, 5, 2, 8]
   #array = [8,8]
   q = QuickSort.new
   q.my_quick_sort(array)

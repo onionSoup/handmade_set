@@ -1,7 +1,12 @@
-class HandmadeSet
 require 'timeout'
+require_relative 'array_extension'
 
-attr_accessor :inner_hash
+using ArrayExtension
+
+class HandmadeSet
+  include Enumerable
+
+  attr_accessor :inner_hash
 
   def initialize(args)
     inner_hash = {}
@@ -14,20 +19,14 @@ attr_accessor :inner_hash
 
       inner_hash[key] = arg
     end
-      #'10' < '2'になったり、文字コード依存の比較になったりする。
-      #ただ、これが直感に反していようが、一貫したソートができれば
-      #二分探索するには十分。
-
-      #sortは後で自分で書き直す（できれば、Hash自体使わないように...）
-
-      @inner_hash = inner_hash.sort.to_h
+    @inner_hash = hash_quick_sort inner_hash
   end
 
   #Hash#has_value?を使わないために定義。
   #もう少しいい書き方がある気がする。
   #TODO:Hash自体を使わない場合、挿入位置まで求める必要がある。
   def binary_search(target, array)
-    timeout(5){
+    timeout(5) {
       while(true)
         mid_index = array.length / 2
 
@@ -35,13 +34,13 @@ attr_accessor :inner_hash
         when -1
           return 'unfound' if array.length <= 1
 
-          array = array.slice!(0.. mid_index-1)
+          array = array.slice(0.. mid_index-1)
         when 0
           return 'found'
         when 1
           return 'unfound' if array.length <= 2
 
-          array = array.slice!(mid_index+1..array.length)
+          array = array.slice(mid_index+1..array.length)
         else
           raise "bug in #{__method__}"
         end
@@ -55,7 +54,7 @@ attr_accessor :inner_hash
     return @inner_hash if binary_search(key, @inner_hash.keys) == 'found'
 
     @inner_hash[key] = target
-    @inner_hash = inner_hash.sort.to_h
+    @inner_hash = hash_quick_sort inner_hash
   end
 
   alias << add
@@ -68,5 +67,21 @@ attr_accessor :inner_hash
   def delete(target)
     key = "#{target.to_s}_#{target.class}"
     h.delete(key)
+  end
+
+  def to_a
+    @inner_hash.values
+  end
+
+  def each()
+    @inner_hash.values.each do |item|
+      yield item
+    end
+  end
+
+  private
+  #refineしたArray#quick_sortを使ってHashをrefineできないため、これで。
+  def hash_quick_sort(hash)
+    hash.keys.quick_sort.map {|key| [key, hash[key]] }.to_h
   end
 end

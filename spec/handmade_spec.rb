@@ -3,7 +3,7 @@ def build_in_set(input)
 end
 
 def handmade_set(input)
-  HandmadeSet.new(input).inner_hash.values
+  HandmadeSet.new(input).to_a
 end
 
 #制御構造、メソッド呼び出し、クラス定義を渡すことは、

@@ -1,16 +1,12 @@
-class HandmadeSet
 require 'timeout'
 require_relative 'array_extension'
 
 using ArrayExtension
 
-#refineしたArray#quick_sortを使ってHashをrefineすることはできないので、これで。
-def hash_quick_sort(hash)
-  hash.keys.quick_sort.map {|key| [key, hash[key]] }.to_h
-end
+class HandmadeSet
+  include Enumerable
 
-
-attr_accessor :inner_hash
+  attr_accessor :inner_hash
 
   def initialize(args)
     inner_hash = {}
@@ -75,5 +71,17 @@ attr_accessor :inner_hash
 
   def to_a
     @inner_hash.values
+  end
+
+  def each()
+    @inner_hash.values.each do |item|
+      yield item
+    end
+  end
+
+  private
+  #refineしたArray#quick_sortを使ってHashをrefineできないため、これで。
+  def hash_quick_sort(hash)
+    hash.keys.quick_sort.map {|key| [key, hash[key]] }.to_h
   end
 end

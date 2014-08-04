@@ -1,3 +1,7 @@
+require_relative '../array_extension'
+
+using ArrayExtension
+
 describe 'Array#quick_sort' do
   context 'when array includes same item' do
     array = [1,3,2,3,2,1,3].quick_sort

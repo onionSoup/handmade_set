@@ -1,5 +1,14 @@
 class HandmadeSet
 require 'timeout'
+require_relative 'array_extension'
+
+using ArrayExtension
+
+#refineしたArray#quick_sortを使ってHashをrefineすることはできないので、これで。
+def hash_quick_sort(hash)
+  hash.keys.quick_sort.map {|key| [key, hash[key]] }.to_h
+end
+
 
 attr_accessor :inner_hash
 
@@ -14,20 +23,14 @@ attr_accessor :inner_hash
 
       inner_hash[key] = arg
     end
-      #'10' < '2'になったり、文字コード依存の比較になったりする。
-      #ただ、これが直感に反していようが、一貫したソートができれば
-      #二分探索するには十分。
-
-      #sortは後で自分で書き直す（できれば、Hash自体使わないように...）
-
-      @inner_hash = inner_hash.quick_sort
+    @inner_hash = hash_quick_sort inner_hash
   end
 
   #Hash#has_value?を使わないために定義。
   #もう少しいい書き方がある気がする。
   #TODO:Hash自体を使わない場合、挿入位置まで求める必要がある。
   def binary_search(target, array)
-    timeout(5){
+    timeout(5) {
       while(true)
         mid_index = array.length / 2
 
@@ -55,7 +58,7 @@ attr_accessor :inner_hash
     return @inner_hash if binary_search(key, @inner_hash.keys) == 'found'
 
     @inner_hash[key] = target
-    @inner_hash = inner_hash.quick_sort
+    @inner_hash = hash_quick_sort inner_hash
   end
 
   alias << add
